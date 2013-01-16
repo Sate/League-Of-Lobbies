@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet"/>
+<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
+<link href="/styles.css" rel="stylesheet" />
+<link href="/animate.css" rel="stylesheet" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>League of lobbies</title>
+</head>
+<body>
+<div class="container">
+<h1>Welcome to the league of lobbies!</h1>
+
+<div>
+<div data-keyboard="false" data-backdrop="static" id="modal2" class="modal hide fade">
+  <div class="modal-body">
+    <div id="userslist" class="hide">
+      <div id="roomInfo"></div>
+      <div id="usersInner"></div>
+    </div>
+</div>
+<div class="modal-footer"><input class="chatinput"/></div>
+
+</div>
+</div>
+
+
+<div data-keyboard="false" data-backdrop="static" id="modal1" class='modal hide fade'>
+  <div class="modal-body">
+        <div class="lanechooser"><div id="error" class="hide"></div>
+        <h2>Type your username and choose your lane:</h2>
+        <input id="username" focus placeholder="Username" /><br/><br/>
+        <a class="btn btn-primary" data-lane="top">Solo Top</a><a class="btn btn-info" data-lane="mid">Solo Mid</a><a class="btn btn-success" data-lane="jun">Jungle</a><a class="btn btn-danger" data-lane="adc">ADC Bot</a><a class="btn btn-warning" data-lane="sup">Support Bot</a>
+        
+        </div>
+    </div>
+</div><!-- modal div -->
+
+
+<script>
+$(document).ready(function(){
+});
+</script>
+
+</div><!-- container div -->
+<script src="/js.js"></script>
+
+</body>
+</html>
