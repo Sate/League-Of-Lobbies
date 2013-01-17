@@ -6,7 +6,7 @@ var app = express()
   , io = require('socket.io').listen(server);
 
 
-server.listen(port);
+exports.server = server.listen(port);
 io.configure(function () { 
   io.set("transports", ["websocket"]); 
   io.set("log level", 1);
@@ -20,6 +20,11 @@ app.use(express.static(__dirname + '/'));
 
 io.sockets.on('connection', function(socket){
 var matchMaker = require('./matchMaker')(io,socket);
+console.log('yo');
+socket.on('blahb', function(){
+  socket.emit('blah', {});
+  
+})
 
     socket.on('laneSelected', function(data){
       matchMaker.connect(socket,data);

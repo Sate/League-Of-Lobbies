@@ -101,6 +101,7 @@ var disconnect = function(socket){
   socket.removeAllListeners();
   players.splice(players.indexOf(socket), 1);
   console.log(roomArray);
+  socket.disconnect();
 };
 
 var leaveRoom = function(socket, data){
