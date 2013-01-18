@@ -36,7 +36,9 @@ describe("matchmaking functions", function(){
         var foo = 5;
         foo.should.equal(7);
       })
-    })
+    });
+
+    // client.close();
       
       
 

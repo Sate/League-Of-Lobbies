@@ -1,19 +1,23 @@
 
 players = [];
 roomArray = [];
+rooms = {};
+
 module.exports = function(io,socket){
 
 var MATCHMAKE = function(){
   console.log('room array is');
   console.log(roomArray);
-  for (var each in io.sockets.clients('queue')){
 
-    var player = io.sockets.clients('queue')[each];
+  for (var each in rooms.queue ){
+
+  // console.log(rooms.queue[each]);
+    var player = rooms.queue[each];
 
     for (var i in roomArray){
       var room = roomArray[i];
-      if (room !== '' && room !== '/queue'){
-        if(io.sockets.clients('queue').length == 0 ) {console.log("no players, returning function"); return false;} 
+      if (room !== '' && room !== 'queue'){
+        if(rooms.queue.length == 0 ) {console.log("no players, returning function"); return false;} 
         if(checkRoomFull(room, player.playerInfo.lane) && room === roomArray[roomArray.length-1]){
           console.log("Room full, putting player in new room");
           leaveRoom(player, {room:"queue"});
@@ -38,7 +42,7 @@ var MATCHMAKE = function(){
 var findNextAvailableRoom = function(lane){
   for (var i = 0; i < roomArray; i++){
     if (!checkRoomFull(roomArray[i], lane) ){
-      if(roomArray[i] === 4){
+      if(roomArray[i] === '??'){
         return roomArray[i];
       }
     }
@@ -53,9 +57,9 @@ var checkRoomFull = function(room, lane){
   // var room = room.replace('/','');
   console.log('Checking if'+ room +'is full ');
   console.log(lane);
-  for (var i = 0; i < io.sockets.clients(room).length; i++){
-    console.log(io.sockets.clients(room)[i].playerInfo.lane);
-    if (io.sockets.clients(room)[i].playerInfo.lane === lane){
+  for (var i = 0; i < rooms[room].length; i++){
+    console.log(rooms[room][i].playerInfo.lane);
+    if (rooms[room][i].playerInfo.lane === lane){
       return true;
     }
   }
@@ -77,25 +81,41 @@ var connect = function(socket, data){
 };
 
 var joinRoom = function(socket, room){
-  socket.join(room);
+  if (!rooms[room]){
+    rooms[room] = [];
+  }
+  rooms[room].push(socket);
   socket.emit('newRoom', room);
-  io.sockets.in(room).emit('updateUserList', {users: getPlayersInRoom(room)});
+  emitToRoom(room, 'updateUserList', {users: getPlayersInRoom(room)} );
+  // io.sockets.in(room).emit('updateUserList', {users: getPlayersInRoom(room)});
 };
 
 var getPlayersInRoom = function(room){
   var result = [];
-  var usersinroom = io.sockets.clients(room);
+  var usersinroom = rooms[room];
   for (var i = 0; i < usersinroom.length; i++ ){
     result.push(usersinroom[i].playerInfo);
   }
   return result;
 };
 
+var emitToRoom = function(room, event, data){
+  console.log('room is '+ room);
+  for (var i = 0; i < rooms[room].length; i++){
+    rooms[room][i].emit(event, data);
+  }
+}
+
+
+
+
 var disconnect = function(socket){
-  var rooms = io.sockets.manager.roomClients[socket.id];
+  var rooms = findRoomsForPlayer(socket);
+  console.log('player is in :');
+  console.log(rooms);
   for(var room in rooms){
-    if(room && rooms[room]){
-      leaveRoom(socket, { room: room.replace('/','') });
+    if(rooms[room]){
+      leaveRoom(socket, { room: rooms[room] });
     }
   }
   socket.removeAllListeners();
@@ -104,18 +124,34 @@ var disconnect = function(socket){
   socket.disconnect();
 };
 
+var findRoomsForPlayer = function(socket){
+  var result = []
+  for (var i in rooms){
+    for (var player in rooms[i]){
+      if (rooms[i][player] === socket){
+        result.push(i);
+      }
+    }
+  }
+  return result;
+}
+
 var leaveRoom = function(socket, data){
   updateStatus(socket, 'offline', data.room);
+  console.log('dataroom is ');
+  console.log(data);
+  console.log('room is '+rooms[data.room]);
+  rooms[data.room].splice(rooms[data.room].indexOf(socket), 1);
   if (data.room !== '' && data.room !== 'queue'){
-    if (io.sockets.clients(data.room).length === 1 ){
+    if (rooms[data.room].length === 0 ){
       console.log(roomArray);
       console.log(data)
       console.log(roomArray.indexOf(parseInt(data.room)))
       roomArray.splice(roomArray.indexOf(parseInt(data.room)), 1);
       console.log('splicing');
+      delete rooms[data.room];
     }
   }
-  socket.leave(data.room);
 };
   
 function updateStatus(socket, status, room){
@@ -128,7 +164,7 @@ function updateStatus(socket, status, room){
 return {
   connect: connect,
   disconnect:disconnect,
-  checkRoomFull: checkRoomFull
+  emitToRoom: emitToRoom
 }
 
 

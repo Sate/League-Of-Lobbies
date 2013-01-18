@@ -9,7 +9,7 @@ var app = express()
 exports.server = server.listen(port);
 io.configure(function () { 
   io.set("transports", ["websocket"]); 
-  io.set("log level", 1);
+  // io.set("log level", 1);
   // io.set("polling duration", 10); 
 });
 
@@ -19,12 +19,8 @@ app.use(express.static(__dirname + '/'));
 
 
 io.sockets.on('connection', function(socket){
+console.log('HELLO');
 var matchMaker = require('./matchMaker')(io,socket);
-console.log('yo');
-socket.on('blahb', function(){
-  socket.emit('blah', {});
-  
-})
 
     socket.on('laneSelected', function(data){
       matchMaker.connect(socket,data);
@@ -35,9 +31,8 @@ socket.on('blahb', function(){
     });
       
     socket.on('messageSent', function(data){
-      console.log(io.sockets.manager.roomClients[socket.id]);
 
-      io.sockets.in(data.room).emit('messageServed', {player: socket.playerInfo, message: data.input, room: data.room } );
+      matchMaker.emitToRoom(data.room, 'messageServed', {player: socket.playerInfo, message: data.input, room: data.room });
 
     });
 });
