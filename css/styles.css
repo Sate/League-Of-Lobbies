@@ -1,0 +1,49 @@
+body{
+  background: rgb(7, 9, 22) url(../assets/page-bg.jpeg) 50% 30px no-repeat fixed
+}
+
+.lanechooser a{
+  float:left;	
+  margin-left:10%;
+  font-family:Arial, Helvetica, sans-serif;
+  font-size:18px;
+  text-decoration:none;
+  cursor:pointer;
+}
+
+.gameModes a{
+  margin-left: 7%;
+}
+
+input#username{
+  border-radius:7px;
+  padding:5px;
+  margin-left:30%;
+}
+
+#modal2 .modal-body{
+  min-height: 350px;
+  opacity: 0.99;
+
+}
+
+#chatbox{
+  background: url('../assets/chat.jpeg');
+  z-index: 50;
+  width: 700px;
+  height: 350px;
+}
+
+#userslist{
+  min-height: 350px;
+  z-index: 1070;
+  background: white;
+width: 150px;
+height: 70%;
+position: absolute;
+right: -30%;
+top: 0%;
+border-radius: 5px;
+box-shadow: 1px 1px 15px #ccc;
+}
+
