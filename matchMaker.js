@@ -69,9 +69,10 @@ var checkRoomFull = function(room, lane){
 
 
 var connect = function(socket, data){
-  if (data.lane.length != 3){
-    data.lane='invalid lane, stop hacking';
-  };
+  console.log(data);
+  for (var i in data){
+    data[i] = data[i].replace("script", "").replace('"','').replace('=','').replace("script>",'');
+  }
   socket.emit('userinfoValid', data);
   socket.playerInfo = data;
   joinRoom(socket, 'queue');

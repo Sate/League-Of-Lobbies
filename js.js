@@ -162,6 +162,9 @@ var DOMBindings = function(){
 		},300);
 	setTimeout(function(){
 		$('#username').focus();
-		},500);
+		},500);	
+	setTimeout(function(){
+		$('html').addClass('animated fadeIn');
+		},850);
 
 })(jQuery);

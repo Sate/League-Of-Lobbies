@@ -23,10 +23,9 @@ var counterView = Backbone.View.extend({
     }
   }
 
-
-
-
-
-
-
 });
+
+
+
+
+

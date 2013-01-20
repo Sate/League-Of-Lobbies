@@ -5,44 +5,26 @@ var AppView = Backbone.View.extend({
   initialize: function(){
     this.setUpChoice();
     chooser = new chooserView({model: new Backbone.Model});
-    counter = new counterModel();
-    counterV = new counterView({model:counter});
+    counterV = new counterView({model: new counterModel()});
     counterV.$el.appendTo($('.modal-header'));
     // this.listenTo(this.model, "change", this.render);
-    // this.model.on('destroy', this.remove, this);
-    // this.$el.addClass("hide active todo");
-    // this.render().appendTo('body');
-    // this.$input = this.$("input[type='text']");
   },
 
   events: {
+    "keydown input.chatinput" : "sendMessage"
     
 
   },
 
+  sendMessage: function(e){
+    var input = $(e.currentTarget).val().trim();
+    if (e.which!==13 || input == "") return;
+    socket.emit('messageSent', { input: input, room: chooser.model.get("myRoom") } );
+    $(e.currentTarget).val('');  
+  },
+
 
   render: function(){ 
-    this.$('span').text(this.model.get("text"));
-    // console.log(this);
-    this.$el.removeClass('hide');
-    return this.$el; 
-  },
-
-  toggleDone: function(){
-    console.log(this.model);
-    this.model.toggle();
-    this.$el.toggleClass("done alert alert-success", this.model.get("done"));
-    this.$el.toggleClass("active  ", !this.model.get("done"));
-  },
-
-  edit: function(){
-    this.$('span').addClass('hide');
-    this.$('input[type=\'text\']').val(this.model.get("text"));
-    this.$('input').removeClass('hide').focus();
-  },
-
-  inputhack: function() {
-    this.submitEnter( {'which': 13} );
   },
 
   submitEnter : function(e){
@@ -58,7 +40,7 @@ var AppView = Backbone.View.extend({
     $('#modal1').modal('show');
     }, 400);
     setTimeout(function(){
-    animate($('html'), 'fadeIn', 0.8);
+    animate($('html'), 'fadeIn', 0.9);
     $('#username').focus();
     },850); 
   },

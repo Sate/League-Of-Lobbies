@@ -6,6 +6,7 @@ var chooserView = Backbone.View.extend({
     this.listenTo(this.model, "change", this.render);
     this.model.set("authenticated", false);
     this.model.set("myRoom", null);
+    this.model.set("authenticated", false);
   },
 
   events: {
@@ -50,14 +51,15 @@ var chooserView = Backbone.View.extend({
       animate($('#error'), 'bounceInDown');
       $('#username').focus();
     }else{
-      if (this.authenticated !== true){
+      if (this.model.get('authenticated') !== true){
         socket = io.connect(window.location.hostname, {
           reconnect:false
         });
         socketBindings();
         var userinfo = { lane: this.model.get("lane"),
                       username: $('#username').val().trim(),
-                      mode: this.model.get("mode") };
+                      mode: this.model.get("mode")
+                       };
         socket.emit('laneSelected', userinfo);
         $('#modal1 .modal-body').html('Joining please wait...');
       }
