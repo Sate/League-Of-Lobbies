@@ -4,6 +4,13 @@ var app = express()
   , server = http.createServer(app)
   , port = process.env.PORT || 5000
   , io = require('socket.io').listen(server);
+var mongoose = require('./mongoinfo');
+
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function callback () {
+  chats = mongoose.model('chats', new mongoose.Schema({name: String, message: String, room: String}));
+});
 
 var counts = {top:0, adc:0, mid:0, jun:0, sup:0, aram:0};
 
@@ -13,7 +20,7 @@ io.set('authorization', function (handshakeData, callback) {
 exports.server = server.listen(port);
 io.configure(function () { 
   io.set("transports", ["websocket"]); 
-  // io.set("log level", 1);
+  io.set("log level", 0);
   // io.set("polling duration", 10); 
 });
 
@@ -46,6 +53,7 @@ setInterval(counter, 2000);
 var matchMaker = require('./matchMaker')(io,socket);
 
     socket.once('laneSelected', function(data){
+      if (!data){socket.disconnect(); return;}
       matchMaker.connect(socket,data);
     });
 
@@ -54,7 +62,11 @@ var matchMaker = require('./matchMaker')(io,socket);
     });
       
     socket.on('messageSent', function(data){
+      if (!data || !data['input']){socket.disconnect(); return;}
       data.input = data.input.replace("script", "").replace("</", "").replace("/>","");
+
+      var message = new chats({name:socket.playerInfo.username, message: data.input, room: data.room});
+      message.save();
 
       matchMaker.emitToRoom(data.room, 'messageServed', {player: socket.playerInfo, message: data.input, room: data.room });
 

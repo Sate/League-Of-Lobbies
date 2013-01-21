@@ -6,17 +6,26 @@
   <link rel="stylesheet" href="css/animate.css"/>
   <link rel="stylesheet" href="css/bootstrap.css"/>
   <link rel="stylesheet" href="css/styles.css"/>
+  <script src="/socket.io/socket.io.js"></script>
   <script type="text/javascript" src="JS/jquery.js"></script>
   <script type="text/javascript" src="JS/underscore.js"></script>
   <script type="text/javascript" src="JS/bootstrap.min.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
+  <script type="text/javascript" src="JS/backbone.js"></script>
+  <script type="text/javascript" src="JS/appView.js"></script>
+  <script type="text/javascript" src="JS/roomListView.js"></script>
+  <script type="text/javascript" src="JS/roomListCollection.js"></script>
+  <script type="text/javascript" src="JS/RoomPlayerView.js"></script>
+  <script type="text/javascript" src="JS/chooserView.js"></script>
+  <script type="text/javascript" src="JS/counterView.js"></script>
+  <script type="text/javascript" src="JS/counterModel.js"></script>
+  <script type="text/javascript" src="JS/animate.js"></script>
 
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
   <div class="row topbar">
     <div class="span12">
-      <a href="about" target="_blank" id="about">About</a>
+      <a href="about" id="about">About</a>
       Mark Chatkhan &#169; 2013 
         <div class="alert hide info">
     <a class="closealert" style="float:right" href="#">&times;</a>
@@ -77,9 +86,9 @@
         <input id="username" focus placeholder="Username" />
         <br/><br/></div>
         <div class="gameModes row">
-          <button rel="tooltip" title="coming soon" class="btn btn-inverse btn-large">10s ARAM</button>
+          <button rel="tooltip" title="coming soon" class="btn btn-inverse btn-large" data-mode="aram">10s ARAM</button>
           <a class="btn btn-large btn-primary" data-mode="norm">5s Normal</a>
-          <button rel="tooltip" title="coming soon"  class="btn btn-inverse btn-large">2s Ranked</button>
+          <button rel="tooltip" title="coming soon" class="btn btn-inverse btn-large" data-mode="rank">2s Ranked</button>
 
         </div>
         <div class="lanes hide row">
@@ -91,4 +100,48 @@
     </div>
   </div><!-- chooser modal div -->
 
-  <script type="text/javascript" src="JS/crazyfile.js"></script>
+<script>
+var socketBindings = function(){
+  socket.on('userinfoValid', function(data){
+    chooser.infoValidated(data);
+  });
+
+  socket.on('messageServed', function(data){
+    console.log('hi');
+    appView.handleMessage(data);
+
+  });
+  socket.on('updateUserList', function(data){
+    roomList.resetRoom(data.users);
+  });
+
+    
+
+  socket.on('updateStatus', function(data){
+    roomList.updateStatus(data);
+    console.log(data);
+  });
+
+  socket.on('newRoom', function(data){
+    console.log('qwdwq');
+    chooser.model.set('myRoom',  data);
+    appView.showChat();
+  });
+
+
+
+};
+
+// var showinfo= function(){
+//   $('#modal2').modal('show');
+//   animate($('#userslist'), 'bounceInRight');
+//   $('#modal2 .modal-body').prepend('Welcome '+userinfo.username+' you are in queue to play '+userinfo.lane+'<br/>');
+//   setTimeout(function(){$('input.chatinput').focus();}, 200);
+// }
+
+(function($){
+var chooser, counterV, roomList;
+var socket = null;
+appView = new AppView();
+})(jQuery);
+</script>

@@ -3,6 +3,7 @@ var chooserView = Backbone.View.extend({
   el : "#modal1",
 
   initialize: function(){
+    this.$("[rel='tooltip']").tooltip();
     this.display();
     this.listenTo(this.model, "change", this.render);
     this.model.set("authenticated", false);
