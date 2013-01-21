@@ -3,6 +3,7 @@ var chooserView = Backbone.View.extend({
   el : "#modal1",
 
   initialize: function(){
+    this.display();
     this.listenTo(this.model, "change", this.render);
     this.model.set("authenticated", false);
     this.model.set("myRoom", null);
@@ -10,8 +11,32 @@ var chooserView = Backbone.View.extend({
   },
 
   events: {
-    "click .gameModes a" : "chooseMode"
+    "click .gameModes a" : "chooseMode",
+    "click #about" : "showAbout",
+    "click .closealert": "togglealert"
 
+  },
+
+  togglealert: function(e){
+    e.preventDefault();
+    $('.alert').fadeToggle();
+  },
+
+  showAbout: function(e){
+    e.preventDefault();
+    $('.info').prependTo(this.$('.lanechooser'));
+    animate($('.info'), 'fadeIn')
+  },
+
+  display:function(){
+    var that = this.$el;
+    setTimeout(function(){
+      that.modal('show');
+    }, 400);
+    setTimeout(function(){
+      animate($('html'), 'fadeIn', 0.8);
+      $('input#username').focus();
+    },900); 
   },
 
   render: function(){
@@ -64,6 +89,11 @@ var chooserView = Backbone.View.extend({
         $('#modal1 .modal-body').html('Joining please wait...');
       }
     }
+  },
+
+  infoValidated: function(data){
+    this.model.set("authenticated", true);
+    this.$el.modal('hide');
   }
 
 

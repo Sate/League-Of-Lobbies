@@ -1,53 +1,145 @@
 <!DOCTYPE HTML>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<script src="/socket.io/socket.io.js"></script>
-<script type="text/javascript" src="JS/jquery.js"></script>
-<script type="text/javascript" src="JS/bootstrap.min.js"></script>
-<link rel="stylesheet" href="css/animate.css"/>
-<link rel="stylesheet" href="css/bootstrap.css"/>
-<link rel="stylesheet" href="css/styles.css"/>
 
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>League of lobbies</title>
+<html>
+<head>
+  <title> League of Lobbies </title>
+  <link rel="stylesheet" href="css/animate.css"/>
+  <link rel="stylesheet" href="css/bootstrap.css"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <script src="/socket.io/socket.io.js"></script>
+  <script type="text/javascript" src="JS/jquery.js"></script>
+  <script type="text/javascript" src="JS/underscore.js"></script>
+  <script type="text/javascript" src="JS/bootstrap.min.js"></script>
+  <script type="text/javascript" src="JS/backbone.js"></script>
+  <script type="text/javascript" src="JS/appView.js"></script>
+  <script type="text/javascript" src="JS/roomListView.js"></script>
+  <script type="text/javascript" src="JS/roomListCollection.js"></script>
+  <script type="text/javascript" src="JS/RoomPlayerView.js"></script>
+  <script type="text/javascript" src="JS/chooserView.js"></script>
+  <script type="text/javascript" src="JS/counterView.js"></script>
+  <script type="text/javascript" src="JS/counterModel.js"></script>
+  <script type="text/javascript" src="JS/animate.js"></script>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-<div class="container">
-<h1>Welcome to the league of lobbies!</h1>
-
-<div>
-<div data-keyboard="false" data-backdrop="static" id="modal2" class="modal hide fade">
-  <div class="modal-body">
-    <div id="userslist" class="hide">
-      <div id="roomInfo"></div>
-      <div id="usersInner"></div>
+  <div class="row topbar">
+    <div class="span12">
+      <a href="about" id="about">About</a>
+      Mark Chatkhan &#169; 2013 
+        <div class="alert hide info">
+    <a class="closealert" style="float:right" href="#">&times;</a>
+    I made this matchmaking site for those who don't feel like arguing about lanes. And those looking to find some quick partners for ARAM or 2-man ranked. This is an open-source project. No one will be making any money from this. The background image is an asset belonging to Riot Games Inc. Website Copyright 2013 Mark Chatkhan
+    
+  </div>
     </div>
-</div>
-<div class="modal-footer"><input class="chatinput"/></div>
+  </div>
+<div class="container main">
+  <div class="row">
+    <div class="span12">
+      <h1>Welcome to the league of lobbies!</h1>
+    </div>
+  </div>
 
-</div>
-</div>
 
 
-<div data-keyboard="false" data-backdrop="static" id="modal1" class='modal hide fade'>
-  <div class="modal-body">
+
+  <div class="row">
+      <div class="span6 offset1">
+        <div id="chatbox" class="hide">
+            <div class="chatText">
+            </div>
+            <div class="inputContainer">
+              <input class="chatinput" placeholder="type here to chat"/>
+            </div>
+        </div>
+      </div>
+      <div class="span3">
+        <div id="userslist" class="hide">
+          <div id="roomInfo">eqkdfhbqwgifqv</div>
+          <div id="usersInner"></div>
+        </div>
+      </div>
+          </div>
+
+      </div>
+
+
+
+
+
+
+
+
+
+</div> <!-- container main -->
+  <div data-keyboard="false" data-backdrop="static" id="modal1" class='modal hide fade'>
+    <div class="modal-header">
+    </div>
+    <div class="modal-body">
+          <a id="about" href="about">About</a>
         <div class="lanechooser"><div id="error" class="hide"></div>
-        <h2>Type your username and choose your lane:</h2>
-        <input id="username" focus placeholder="Username" /><br/><br/>
-        <a class="btn btn-primary" data-lane="top">Solo Top</a><a class="btn btn-info" data-lane="mid">Solo Mid</a><a class="btn btn-success" data-lane="jun">Jungle</a><a class="btn btn-danger" data-lane="adc">ADC Bot</a><a class="btn btn-warning" data-lane="sup">Support Bot</a>
+        <div>
+        <h2>Type your username and choose your gametype:</h2>
+        <input id="username" focus placeholder="Username" />
+        <br/><br/></div>
+        <div class="gameModes row">
+          <a class="btn btn-inverse btn-large" data-mode="aram">10s ARAM</a>
+          <a class="btn btn-large btn-primary" data-mode="norm">5s Normal</a>
+          <a class="btn btn-inverse btn-large" data-mode="rank">2s Ranked</a>
+
+        </div>
+        <div class="lanes hide row">
+        <br/>
+        <a class="btn btn-warning" data-lane="top">Solo Top</a><a class="btn btn-primary" data-lane="mid">Solo Mid</a><a class="btn btn-success" data-lane="jun">Jungle</a><a class="btn btn-danger" data-lane="adc">ADC Bot</a><a class="btn btn-info" data-lane="sup">Support Bot</a>
+        </div>
         
         </div>
     </div>
-</div><!-- modal div -->
-
+  </div><!-- chooser modal div -->
 
 <script>
-$(document).ready(function(){
-});
+var socketBindings = function(){
+  socket.on('userinfoValid', function(data){
+    chooser.infoValidated(data);
+  });
+
+  socket.on('messageServed', function(data){
+    console.log('hi');
+    appView.handleMessage(data);
+
+  });
+  socket.on('updateUserList', function(data){
+    roomList.resetRoom(data.users);
+  });
+
+    
+
+  socket.on('updateStatus', function(data){
+    roomList.updateStatus(data);
+    console.log(data);
+  });
+
+  socket.on('newRoom', function(data){
+    console.log('qwdwq');
+    chooser.model.set('myRoom',  data);
+    appView.showChat();
+  });
+
+
+
+};
+
+// var showinfo= function(){
+//   $('#modal2').modal('show');
+//   animate($('#userslist'), 'bounceInRight');
+//   $('#modal2 .modal-body').prepend('Welcome '+userinfo.username+' you are in queue to play '+userinfo.lane+'<br/>');
+//   setTimeout(function(){$('input.chatinput').focus();}, 200);
+// }
+
+(function($){
+var chooser, counterV, roomList;
+var socket = null;
+appView = new AppView();
+})(jQuery);
 </script>
-
-</div><!-- container div -->
-<script src="/js.js"></script>
-
-</body>
-</html>

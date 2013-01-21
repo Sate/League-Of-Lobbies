@@ -18,6 +18,10 @@ var animate = function(element,effect,duration, fatal){
         setTimeout(function(){
           element.removeAttr("style");
         }, timeOut);
+      } else {
+        setTimeout(function(){
+          element.remove();
+        }, timeOut);
       }
     }
     element.addClass('animated ' +effect);
@@ -25,6 +29,9 @@ var animate = function(element,effect,duration, fatal){
       setTimeout(function(){
         element.removeClass(effect+' animated');
       }, timeOut);
+    } else {
+      setTimeout(function(){
+          element.remove();
+        }, timeOut);
     }
-
   }

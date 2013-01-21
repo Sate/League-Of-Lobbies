@@ -7,7 +7,9 @@ var app = express()
 
 var counts = {top:0, adc:0, mid:0, jun:0, sup:0, aram:0};
 
-
+io.set('authorization', function (handshakeData, callback) {
+    callback(null, true); // error first callback style 
+});
 exports.server = server.listen(port);
 io.configure(function () { 
   io.set("transports", ["websocket"]); 
@@ -40,14 +42,14 @@ app.use("/about", function(req, res, next){
 
 io.sockets.on('connection', function(socket){
 console.log('HELLO');
-setInterval(counter, 4000);
+setInterval(counter, 2000);
 var matchMaker = require('./matchMaker')(io,socket);
 
-    socket.on('laneSelected', function(data){
+    socket.once('laneSelected', function(data){
       matchMaker.connect(socket,data);
     });
 
-    socket.on('disconnect', function(){
+    socket.once('disconnect', function(){
       matchMaker.disconnect(socket);
     });
       

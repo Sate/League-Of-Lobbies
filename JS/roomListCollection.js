@@ -1,10 +1,10 @@
-var RoomListCollection = Backbone.Collection.extend ({
+var roomListCollection = Backbone.Collection.extend ({
 
   url:function(){
 
   },
 
-  
+
 
 
 });

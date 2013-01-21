@@ -2,18 +2,23 @@
 players = [];
 roomArray = [];
 rooms = {};
+uniques = {};
+roomsARAM = {};
+roomArrayARAM = [];
+roomArrayNORM = [];
+roomsNORM = {};
 
 module.exports = function(io,socket){
 
-var MATCHMAKE = function(){
+var MATCHMAKE = function(mode){
   console.log('room array is');
   console.log(roomArray);
 
+  // if (mode==="rank")
+
   for (var each in rooms.queue ){
-
-  // console.log(rooms.queue[each]);
     var player = rooms.queue[each];
-
+    if (player.playerInfo.mode !== "norm") return;
     for (var i in roomArray){
       var room = roomArray[i];
       if (room !== '' && room !== 'queue'){
@@ -69,16 +74,23 @@ var checkRoomFull = function(room, lane){
 
 
 var connect = function(socket, data){
+  if (!data) {return;}
   console.log(data);
   for (var i in data){
     data[i] = data[i].replace("script", "").replace('"','').replace('=','').replace("script>",'');
   }
+  if (data.mode !== "norm"){socket.disconnect()}
+  data.uid = generateID();
+  if (data.mode === "aram"){data.lane = "aram"}
+  uniques[data.uid] = 1;
   socket.emit('userinfoValid', data);
   socket.playerInfo = data;
-  joinRoom(socket, 'queue');
+  // if (data.mode === "aram"){rooms = roomsARAM; roomArray= roomArrayARAM;}
+  // if (data.mode === "norm"){rooms = roomsNORM; roomArray= roomArrayNORM;}
+  // if (data.mode === "rank"){joinRoom(socket, 'Rankqueue')}
   players.push(socket);
-
-  MATCHMAKE();
+  joinRoom(socket, 'queue');
+  MATCHMAKE(data.mode);
 };
 
 var joinRoom = function(socket, room){
@@ -87,7 +99,9 @@ var joinRoom = function(socket, room){
   }
   rooms[room].push(socket);
   socket.emit('newRoom', room);
-  emitToRoom(room, 'updateUserList', {users: getPlayersInRoom(room)} );
+  socket.emit('updateUserList', {users: getPlayersInRoom(room)});
+  updateStatus(socket, 'online', room);
+  // emitToRoom(room, 'updateUserList', {users: getPlayersInRoom(room)} );
   // io.sockets.in(room).emit('updateUserList', {users: getPlayersInRoom(room)});
 };
 
@@ -154,10 +168,17 @@ var leaveRoom = function(socket, data){
     }
   }
 };
+
+var generateID= function(){
+  var temphash = Math.floor(Math.random() * 0x1000000);
+  while (temphash in uniques){
+    temphash = Math.floor(Math.random() * 0x1000000);
+  }
+  return temphash;
+}
   
 function updateStatus(socket, status, room){
-  room = room.replace('/','');
-  io.sockets.in(room).emit('updateStatus', { player: socket.playerInfo, status: status, room: room });
+  emitToRoom(room, 'updateStatus', { player: socket.playerInfo, status: status, room: room });
 }
 
 

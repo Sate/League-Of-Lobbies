@@ -3,17 +3,27 @@ var AppView = Backbone.View.extend({
   el : ".container.main",
 
   initialize: function(){
-    this.setUpChoice();
     chooser = new chooserView({model: new Backbone.Model});
     counterV = new counterView({model: new counterModel()});
     counterV.$el.appendTo($('.modal-header'));
-    // this.listenTo(this.model, "change", this.render);
+    roomList = new roomListView({collection: new roomListCollection()});
   },
 
   events: {
     "keydown input.chatinput" : "sendMessage"
-    
 
+  },
+
+  handleMessage: function(data){
+    var laneDict = counterV.dictionary;
+    if (data.player.lane){
+    data.player.lane = laneDict[data.player.lane];
+    }
+    var username = data.player.username;
+    var userlane = data.player.lane;
+    var message = data.message;
+    this.$('.chatText').append('<b>'+username+' ('+userlane+')</b>: '+message+'<br/>');
+    this.$('.chatText').scrollTop(this.$('.chatText')[0].scrollHeight);
   },
 
   sendMessage: function(e){
@@ -29,20 +39,10 @@ var AppView = Backbone.View.extend({
 
   submitEnter : function(e){
     if (e.which === 13 ) {
-      this.model.set({"text" : this.$input.val() });
+      this.model.set({"text" : this.$input.val()});
       this.$input.addClass('hide');
       this.$('span').removeClass('hide');
       }
-  },
-
-  setUpChoice: function(){
-    setTimeout(function(){
-    $('#modal1').modal('show');
-    }, 400);
-    setTimeout(function(){
-    animate($('html'), 'fadeIn', 0.9);
-    $('#username').focus();
-    },850); 
   },
 
   connect: function(e){
@@ -58,11 +58,10 @@ var AppView = Backbone.View.extend({
           reconnect:false
         });
         socketBindings();
-        console.log($(e.currentTarget).data('lane'));
         var userinfo = {lane: $(e.currentTarget).data('lane'),
                       username: $('#username').val().trim() };
         socket.emit('laneSelected', userinfo);
-        $('#modal1 .modal-body').html('Joining please wait...');
+        chooser.$('.modal-body').html('Joining please wait...');
       }
     }
   },
@@ -72,6 +71,18 @@ var AppView = Backbone.View.extend({
     var model = this.model;
     setTimeout(function(){model.destroy()}, 150)
     
+  },
+
+  showChat: function(){
+    counterV.$el.appendTo($('h1'));
+    animate(counterV.$el, 'bounceInLeft', 0.7);
+    animate(this.$('#chatbox'), 'bounceInRight', 0.7);
+    setTimeout(function(){
+    this.$('input.chatinput').focus();
+    animate(roomList.$el, 'fadeIn');
+    }, 600)
+
+      
   }
 
 });

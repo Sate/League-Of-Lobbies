@@ -6,12 +6,7 @@ var counterView = Backbone.View.extend({
     var that = this;
     this.listenTo(this.model, "change", this.render);
     setInterval(function(){that.model.fetch()}, 1000);
-  },
-
-  render: function(){
-    this.$el.html("<div class='label label-info'>Current players in queue</div><br/>");
-    for (var i in this.model.attributes){
-      var dict = {
+    this.dictionary = {
         jun: "Jungle",
         sup: "Support",
         adc: "AD Carry",
@@ -19,7 +14,12 @@ var counterView = Backbone.View.extend({
         top: "Solo Top",
         aram: "ARAM"
       }
-      this.$el.append("<div class='label'>"+this.model.attributes[i]+' '+dict[i]+"</div>");
+  },
+
+  render: function(){
+    this.$el.html("<div class='label label-info'>Current players in queue</div><br/>");
+    for (var i in this.model.attributes){
+      this.$el.append("<div class='label'>"+this.model.attributes[i]+' '+this.dictionary[i]+"</div>");
     }
   }
 
