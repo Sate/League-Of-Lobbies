@@ -3,7 +3,7 @@ League-Of-Lobbies
 
 
 ## What is this?
-This is a matchmaking system with chat for league of legends players. Players choose a lane to play and are paired with other players of different lanes.
+This is a technical exercise in rapidly developing real-time javascript apps. At face value it is a matchmaking system with chat for league of legends players. Players choose a lane to play and are paired with other players of different lanes.
 
 This uses node.js, backbone.js, mongoose.js, and websockets.
 
@@ -13,7 +13,14 @@ Check it out leagueoflobbies.com
 I made this both for the technical exercise and the pain-point of players of this game. The game is played in teams of 5. Each of the 5 spots on a team has a specific role in the game (called a 'lane'), and players always have a lane in mind when they want to play the game. Players are simply paired randomly however and are left to argue about who gets what lane. This app aims to resolve this by allowing players to easily find others playing complimentary lanes.
 
 ## Technical observations
-I tried to keep the app fairly low level. For example using backbone over something like angular. At the beginning it felt over-engineered, but the initial investment started paying off later on in development. For example towards the end I was able to implement the re-queue feature in only about 30 minutes, which I thought would take way longer. 
+I tried to keep the app fairly low level. For example using backbone over something like angular. At the beginning it felt over-engineered, and hard to decide about how many views/models to split up into, but the initial investment started paying off later on in development. For example towards the end I was able to implement the re-queue feature in only about 30 minutes, which I thought would take way longer. I gained a great deal of experience in all aspects of backbone and the websocket API.
+At some points I purposely over-engineered just to explore more ground. For example I made a self-updating API at http://leagueoflobbies.com/stats which lists all players on the server, and this is synced with a backbone collection, independent of the websocket connection. 
+
+
+--Main takeaways
+  - Once your backbone.js architecture is fleshed out, you really appreciate the fine control and understanding you have over all aspects of the app. Even so, the same thing can be achieved with Angular directives and a bit of work. At this point backbone.js feels dated and it is hard to imagine a situation in which it would be a more efficient development library than angular.
+  - All animations are done in CSS3. CSS3 animations are really cool.
+  - It's worth understanding websockets instead of relying on socket.io
 
 --The matchmaker
   The goal of the matchmaker is to make sets of 5 different lanes (top, middle, bottom, jungle, support). This sounds simple but taking into account players randomly joining/leaving existing sets it got a little complicated. Basically the current setup is:
