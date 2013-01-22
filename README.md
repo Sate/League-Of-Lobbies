@@ -17,11 +17,11 @@ I tried to keep the app fairly low level. For example using backbone over someth
 
 --The matchmaker
   The goal of the matchmaker is to make sets of 5 different lanes (top, middle, bottom, jungle, support). This sounds simple but taking into account players randomly joining/leaving existing sets it got a little complicated. Basically the current setup is:
-   -When a player connects they are put into a queue
-   -The queue is immediately iterated over
-   -For each iteration, all current rooms are iterated over to see if the current player can fit in them as a set
-   -If there is a fit, the player is removed from the queue and joined to that room. They can then chat with everyone else in the room. 
-   -If all rooms have been checked and the current player can't be matched, the player is put into a new room alone.
+   *When a player connects they are put into a queue
+   *The queue is immediately iterated over
+   *For each iteration, all current rooms are iterated over to see if the current player can fit in them as a set
+   *If there is a fit, the player is removed from the queue and joined to that room. They can then chat with everyone else in the room. 
+   *If all rooms have been checked and the current player can't be matched, the player is put into a new room alone.
 
    This is trivial with a set amount of players, however this algorithm needs to account for players constantly joining and even leaving existing sets. For now the solution is a re-queue button for the user, which can be clicked to take them out of their current room and be re-matched. In the future I'll make this an automatic part of the algorithm. 
 
