@@ -7,7 +7,17 @@ var roomListView = Backbone.View.extend({
     this.listenTo(this.collection, "add", this.renderNew)
   },
 
+  events: {
+    'click .copy': 'copyToClipboard'
 
+  },
+
+
+  copyToClipboard: function(e) {
+    e.preventDefault();
+    var text = $(e.currentTarget).data("name");
+    window.prompt ("Copy to clipboard: Ctrl+C, Enter", text);
+  },
 
   resetRoom: function(newData){
     this.collection.reset(newData);
@@ -15,8 +25,8 @@ var roomListView = Backbone.View.extend({
 
   renderNew: function(){
     var player = this.collection.last();
-    this.$('#usersInner').append("<div id='"+ player.get("uid")+"'>"+player.get("username")+': '+counterV.dictionary[player.get("lane")]+"</div>")
-    animate($('#'+player.get("uid")), 'flipInY', 0.5);
+    this.$('#usersInner').append("<div class='"+ player.get("uid")+"'>"+player.get("username")+': '+counterV.dictionary[player.get("lane")]+"<a data-name='"+player.get("username")+"' class='copy' href='#'> Copy</a></div>")
+    animate($('.'+player.get("uid")), 'flipInY', 0.5);
   },
 
   render: function(){
@@ -24,7 +34,7 @@ var roomListView = Backbone.View.extend({
     this.$("#usersInner").html('');
     this.collection.each(function(player){
       this.$('#usersInner').append(
-        "<div id='"+ player.get("uid")+"'>"+player.get("username")+': '+counterV.dictionary[player.get("lane")]+"</div>")
+        "<div class='"+ player.get("uid")+"'>"+player.get("username")+': '+counterV.dictionary[player.get("lane")]+"<a data-name='"+player.get("username")+"' class='copy' href='#'> Copy</a></div>")
     });
     animate($('#usersInner'), 'fadeIn');
   },
@@ -38,19 +48,18 @@ var roomListView = Backbone.View.extend({
         for (var i in data){ found.set(i, data[i]) }
       }
     } else if (data.status === 'offline'){
-      animate($('div#'+found.get('uid')), 'flipOutY', 0.5, 'fatal');
-      setTimeout(function(){delete found;}, 500);
+      animate($('div.'+found.get('uid')), 'flipOutY', 0.5, 'fatal');
+      found.destroy();
     }
 
   }
 
-
-
-
-
-
-
-
-
-
 });
+
+
+
+
+
+
+
+

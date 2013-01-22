@@ -181,12 +181,23 @@ function updateStatus(socket, status, room){
   emitToRoom(room, 'updateStatus', { player: socket.playerInfo, status: status, room: room });
 }
 
+var requeue = function (){
+  var rooms = findRoomsForPlayer(socket);
+  for(var room in rooms){
+    if(rooms[room]){
+      leaveRoom(socket, { room: rooms[room] });
+    }
+  }
+  joinRoom(socket, 'queue');
+  MATCHMAKE();
+};
 
 
 return {
   connect: connect,
   disconnect:disconnect,
-  emitToRoom: emitToRoom
+  emitToRoom: emitToRoom,
+  requeue: requeue
 }
 
 

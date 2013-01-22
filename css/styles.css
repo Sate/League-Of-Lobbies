@@ -12,6 +12,19 @@ body{
   cursor:pointer;
 }
 
+h1{
+  color: #eee;
+  text-shadow: 0px 0px 20px white;
+}
+
+.helv{
+  font-family: Helvetica!important;
+}
+
+.brush{
+  font-family: brush!important;
+}
+
 .info{
   max-width: 550px;
   z-index: 2000;
@@ -39,12 +52,16 @@ body{
   margin-left: 7%;
 }
 
+#controlButtons{
+  position: absolute;
+  bottom: 0;
+}
+
 .chatText{
   max-width: 460px;
   max-height: 288px;
   padding: 20px;
   height: 100%;
-  font-family: brush, Helvetica;
   overflow: auto;
   font-size: 20px;
   -webkit-overflow-scrolling: touch; 
@@ -60,7 +77,6 @@ body{
 }
 
 .inputContainer .chatinput{
-  font-family: brush, Helvetica;
   font-size: 40px;
   opacity: 0.9;
   line-height: 1.5;

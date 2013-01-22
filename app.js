@@ -60,6 +60,10 @@ var matchMaker = require('./matchMaker')(io,socket);
     socket.once('disconnect', function(){
       matchMaker.disconnect(socket);
     });
+
+    socket.on("requeue", function(socket){
+      matchMaker.requeue(socket);
+    });
       
     socket.on('messageSent', function(data){
       if (!data || !data['input']){socket.disconnect(); return;}

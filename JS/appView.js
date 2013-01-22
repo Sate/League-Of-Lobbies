@@ -10,9 +10,21 @@ var AppView = Backbone.View.extend({
   },
 
   events: {
-    "keydown input.chatinput" : "sendMessage"
-
+    "keydown input.chatinput" : "sendMessage",
+    "click #fontToggle" : "toggleFont",
+    "click #requeue" : 'requeue'
   },
+
+  toggleFont: function(e){
+    e.preventDefault();
+    this.$('.chatinput').toggleClass('brush');
+    this.$('.chatText').toggleClass('brush');
+  },
+
+  requeue: function(e){
+    e.preventDefault();
+    socket.emit('requeue');
+  },  
 
   handleMessage: function(data){
     var laneDict = counterV.dictionary;
