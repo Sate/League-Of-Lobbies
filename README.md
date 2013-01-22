@@ -18,6 +18,7 @@ At some points I purposely over-engineered just to explore more ground. For exam
 
 
 --Main takeaways
+  - Validating/catching socket data on a node.js server is extremely important. A client can open a new websocket through the chrome console and start sending events without any data, if data was expected by the server it will crash the node server. 
   - Once your backbone.js architecture is fleshed out, you really appreciate the fine control and understanding you have over all aspects of the app. Even so, the same thing can be achieved with Angular directives and a bit of work. At this point backbone.js feels dated and it is hard to imagine a situation in which it would be a more efficient development library than angular.
   - All animations are done in CSS3. CSS3 animations are really cool.
   - It's worth understanding websockets instead of relying on socket.io
