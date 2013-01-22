@@ -23,7 +23,7 @@ At some points I purposely over-engineered just to explore more ground. For exam
   - It's worth understanding websockets instead of relying on socket.io
 
 --The matchmaker
-  The goal of the matchmaker is to make sets of 5 different lanes (top, middle, bottom, jungle, support). This sounds simple but taking into account players randomly joining/leaving existing sets it got a little complicated. Basically the current setup is:
+  - The goal of the matchmaker is to make sets of 5 different lanes (top, middle, bottom, jungle, support). This sounds simple but taking into account players randomly joining/leaving existing sets it got a little complicated. Basically the current setup is:
    * When a player connects they are put into a queue
    * The queue is immediately iterated over
    * For each iteration, all current rooms are iterated over to see if the current player can fit in them as a set
