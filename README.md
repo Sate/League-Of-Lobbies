@@ -30,8 +30,9 @@ At some points I purposely over-engineered just to explore more ground. For exam
    * For each iteration, all current rooms are iterated over to see if the current player can fit in them as a set
    * If there is a fit, the player is removed from the queue and joined to that room. They can then chat with everyone else in the room. 
    * If all rooms have been checked and the current player can't be matched, the player is put into a new room alone.
+   * Rooms and players are kept track of with a few hashes and arrays. Messages are routed with logic that find the source room, iterate over the players in it, and send messages to each player. 
 
-   This is trivial with a set amount of players, however this algorithm needs to account for players constantly joining and even leaving existing sets. For now the solution is a re-queue button for the user, which can be clicked to take them out of their current room and be re-matched. In the future I'll make this an automatic part of the algorithm. 
+   This is easy with a set amount of players, however this algorithm needs to account for players constantly joining and even leaving existing sets. For now the solution is a re-queue button for the user, which can be clicked to take them out of their current room and be re-matched. In the future I'll make this an automatic part of the algorithm. 
 
 --Socket.io
   Socket.io seemed to have too many strange behaviors due to the responsiblities the library chose to cover. For example the github page for socketio has year old issues about memory leaks. The new engine.io seems to be pretty solid though and the author is looking to integrate it back into socket.io in the future. 
