@@ -13,7 +13,7 @@ var animate = function(element,effect,duration, fatal){
         '-o-animation-duration': duration+ 's',
         'animation-duration': duration+ 's'}
       element.css(durObj);
-      timeOut = duration*1000+50;
+      timeOut = duration*1000;
       if(fatal !== "fatal"){
         setTimeout(function(){
           element.removeAttr("style");

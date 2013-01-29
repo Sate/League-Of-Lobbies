@@ -3,6 +3,7 @@ var AppView = Backbone.View.extend({
   el : ".container.main",
 
   initialize: function(){
+    animate($('#globalChat'), 'fadeIn', 0.5);
     chooser = new chooserView({model: new Backbone.Model});
     counterV = new counterView({model: new counterModel()});
     counterV.$el.appendTo($('.modal-header'));
@@ -34,14 +35,16 @@ var AppView = Backbone.View.extend({
     var username = data.player.username;
     var userlane = data.player.lane;
     var message = data.message;
-    this.$('.chatText').append('<b>'+username+' ('+userlane+')</b>: '+message+'<br/>');
-    this.$('.chatText').scrollTop(this.$('.chatText')[0].scrollHeight);
+    var chatBox = data.room === 'global' ? $('#gChatArea') : $('.chatText') ;
+    chatBox.append('<b>'+username+' ('+userlane+')</b>: '+message+'<br/>');
+    chatBox.scrollTop(chatBox[0].scrollHeight);
   },
 
   sendMessage: function(e){
+    var room = $(e.currentTarget).hasClass('global') ? 'global' : chooser.model.get("myRoom");
     var input = $(e.currentTarget).val().trim();
     if (e.which!==13 || input == "") return;
-    socket.emit('messageSent', { input: input, room: chooser.model.get("myRoom") } );
+    socket.emit('messageSent', { input: input, room: room } );
     $(e.currentTarget).val('');  
   },
 
@@ -86,13 +89,20 @@ var AppView = Backbone.View.extend({
   },
 
   showChat: function(){
+    var delay = 0;
+    if ($('#chatbox.hide').length === 0){
+      animate(this.$('#chatbox'), 'bounceOutLeft', 0.3)
+      delay = 300;
+    }
+    setTimeout(function(){
     counterV.$el.appendTo($('h1'));
     animate(counterV.$el, 'bounceInLeft', 0.7);
     animate(this.$('#chatbox'), 'bounceInRight', 0.7);
+    }, delay);
     setTimeout(function(){
-    this.$('input.chatinput').focus();
+    this.$('input.chatinput:not(.global)').focus();
     animate(roomList.$el, 'fadeIn');
-    }, 600)
+    }, 600+delay);
 
       
   }

@@ -116,8 +116,9 @@ var getPlayersInRoom = function(room){
 
 var emitToRoom = function(room, event, data){
   console.log('room is '+ room);
-  for (var i = 0; i < rooms[room].length; i++){
-    rooms[room][i].emit(event, data);
+  var targetRoom = room === 'global' ?  players : rooms[room];
+  for (var i = 0; i < targetRoom.length; i++){
+    targetRoom[i].emit(event, data);
   }
 }
 

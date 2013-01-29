@@ -3,6 +3,28 @@ body{
   font-family: Helvetica neue, Helvetica;
 }
 
+#globalChat{
+  background: white;
+  border-radius: 10px;
+  height: 350px;
+  box-shadow: 0px 0px 10px white;
+  position: relative;
+}
+
+#globalChat input{
+  position: absolute;
+  bottom: 10px;
+  width: 98%;
+  border:none;
+}
+
+#gChatArea{
+  max-height: 300px;
+  -webkit-overflow-scrolling: touch; 
+  overflow: auto;
+
+}
+
 .lanechooser a{
   float:left;	
   margin-left:10%;
