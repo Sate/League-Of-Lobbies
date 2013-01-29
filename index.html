@@ -113,6 +113,7 @@
 var socketBindings = function(){
   socket.on('userinfoValid', function(data){
     chooser.infoValidated(data);
+    appView.showGlobalChat();
   });
 
   socket.on('messageServed', function(data){
@@ -132,7 +133,6 @@ var socketBindings = function(){
   });
 
   socket.on('newRoom', function(data){
-    console.log('qwdwq');
     chooser.model.set('myRoom',  data);
     appView.showChat();
   });

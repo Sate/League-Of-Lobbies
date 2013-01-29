@@ -3,7 +3,6 @@ var AppView = Backbone.View.extend({
   el : ".container.main",
 
   initialize: function(){
-    animate($('#globalChat'), 'fadeIn', 0.5);
     chooser = new chooserView({model: new Backbone.Model});
     counterV = new counterView({model: new counterModel()});
     counterV.$el.appendTo($('.modal-header'));
@@ -48,10 +47,6 @@ var AppView = Backbone.View.extend({
     $(e.currentTarget).val('');  
   },
 
-
-  render: function(){ 
-  },
-
   submitEnter : function(e){
     if (e.which === 13 ) {
       this.model.set({"text" : this.$input.val()});
@@ -81,13 +76,6 @@ var AppView = Backbone.View.extend({
     }
   },
 
-  delete : function(){
-    this.$el.addClass('animated bounceOutLeft');
-    var model = this.model;
-    setTimeout(function(){model.destroy()}, 150)
-    
-  },
-
   showChat: function(){
     var delay = 0;
     if ($('#chatbox.hide').length === 0){
@@ -103,8 +91,12 @@ var AppView = Backbone.View.extend({
     this.$('input.chatinput:not(.global)').focus();
     animate(roomList.$el, 'fadeIn');
     }, 600+delay);
+  },
+
+  showGlobalChat: function(){
+    animate($('#globalChat'), 'fadeIn', 0.5);
+  }
 
       
-  }
 
 });
