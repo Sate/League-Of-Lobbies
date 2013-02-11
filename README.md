@@ -41,8 +41,9 @@ At some points I purposely over-engineered just to explore more ground. For exam
   Other than that websockets work pretty well. The app is configured to only use websockets.
 
 
-## License
-Copyright 2013, Mark Chatkhan.
+--Response
+  
+[![](http://markchatkhan.com/1.png)]
 
 
 
